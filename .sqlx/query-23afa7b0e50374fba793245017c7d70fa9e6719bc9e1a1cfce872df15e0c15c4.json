@@ -1,0 +1,144 @@
+{
+  "db_name": "MySQL",
+  "query": "\n            SELECT id, user_id, power_package_id, order_id as \"order_id: String\", types, amount,\n            start_time, status, earnings, created_at, updated_at, lv, daily_yield_percentage\n            FROM user_power\n            WHERE status = ? AND start_time > ? ORDER BY user_id\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": {
+          "type": "LongLong",
+          "flags": "NOT_NULL | PRIMARY_KEY | UNSIGNED | AUTO_INCREMENT",
+          "max_size": 20
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "user_id",
+        "type_info": {
+          "type": "LongLong",
+          "flags": "NOT_NULL | MULTIPLE_KEY | UNSIGNED | NO_DEFAULT_VALUE",
+          "max_size": 20
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "power_package_id",
+        "type_info": {
+          "type": "LongLong",
+          "flags": "NOT_NULL | MULTIPLE_KEY | UNSIGNED | NO_DEFAULT_VALUE",
+          "max_size": 20
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "order_id: String",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | MULTIPLE_KEY | BINARY | NO_DEFAULT_VALUE",
+          "max_size": 200
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "types",
+        "type_info": {
+          "type": "Short",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "max_size": 6
+        }
+      },
+      {
+        "ordinal": 5,
+        "name": "amount",
+        "type_info": {
+          "type": "NewDecimal",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "max_size": 22
+        }
+      },
+      {
+        "ordinal": 6,
+        "name": "start_time",
+        "type_info": {
+          "type": "Timestamp",
+          "flags": "MULTIPLE_KEY | BINARY",
+          "max_size": 19
+        }
+      },
+      {
+        "ordinal": 7,
+        "name": "status",
+        "type_info": {
+          "type": "Short",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "max_size": 6
+        }
+      },
+      {
+        "ordinal": 8,
+        "name": "earnings",
+        "type_info": {
+          "type": "NewDecimal",
+          "flags": "NOT_NULL",
+          "max_size": 22
+        }
+      },
+      {
+        "ordinal": 9,
+        "name": "created_at",
+        "type_info": {
+          "type": "Timestamp",
+          "flags": "NOT_NULL | BINARY | TIMESTAMP",
+          "max_size": 19
+        }
+      },
+      {
+        "ordinal": 10,
+        "name": "updated_at",
+        "type_info": {
+          "type": "Timestamp",
+          "flags": "NOT_NULL | BINARY | TIMESTAMP | ON_UPDATE_NOW",
+          "max_size": 19
+        }
+      },
+      {
+        "ordinal": 11,
+        "name": "lv",
+        "type_info": {
+          "type": "Short",
+          "flags": "NOT_NULL",
+          "max_size": 6
+        }
+      },
+      {
+        "ordinal": 12,
+        "name": "daily_yield_percentage",
+        "type_info": {
+          "type": "NewDecimal",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "max_size": 12
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "23afa7b0e50374fba793245017c7d70fa9e6719bc9e1a1cfce872df15e0c15c4"
+}

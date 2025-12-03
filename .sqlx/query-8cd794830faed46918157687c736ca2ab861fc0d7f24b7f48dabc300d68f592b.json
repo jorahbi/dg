@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "\n            UPDATE system_configs\n            SET config_value = ?, description = ?, updated_at = ?\n            WHERE config_key = ?\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": []
+  },
+  "hash": "8cd794830faed46918157687c736ca2ab861fc0d7f24b7f48dabc300d68f592b"
+}

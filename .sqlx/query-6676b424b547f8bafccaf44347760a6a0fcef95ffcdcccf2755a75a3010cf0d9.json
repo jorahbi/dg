@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "\n            INSERT INTO user_power(\n                user_id, power_package_id, order_id, types, amount, status, earnings, lv, daily_yield_percentage\n            ) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?)\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 8
+    },
+    "nullable": []
+  },
+  "hash": "6676b424b547f8bafccaf44347760a6a0fcef95ffcdcccf2755a75a3010cf0d9"
+}

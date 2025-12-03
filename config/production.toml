@@ -1,0 +1,119 @@
+# 生产环境配置
+# 注意：实际生产环境请使用安全的密钥和数据库连接字符串
+
+# 服务器配置
+[server]
+host = "0.0.0.0"
+port = 8080
+workers = 8
+max_connections = 5000
+timeout = 30
+keep_alive = 75
+
+# 数据库配置 - 生产环境请使用实际的生产数据库
+[database]
+url = "mysql://username:password@prod-db-host:3306/coin_dgai_prod"
+max_connections = 50
+min_connections = 10
+connect_timeout = 30
+idle_timeout = 600
+max_lifetime = 1800
+
+# Redis配置 - 生产环境Redis集群
+[redis]
+url = "redis://prod-redis-cluster:6379"
+pool_size = 20
+connection_timeout = 30
+command_timeout = 5
+
+# JWT配置 - 生产环境请使用强密钥
+[jwt]
+secret = "CHANGE-THIS-TO-A-VERY-SECURE-SECRET-IN-PRODUCTION"
+expiration = 86400  # 24小时
+refresh_expiration = 604800  # 7天
+issuer = "coin-dgai-api-prod"
+
+# 文件上传配置 - 生产环境CDN
+[upload]
+max_file_size = 5242880  # 5MB
+allowed_types = ["image/jpeg", "image/png", "image/gif"]
+upload_path = "/var/uploads"
+cdn_url = "https://cdn.coin.com"
+
+# 加密货币配置
+[crypto]
+default_currency = "USDT"
+supported_currencies = ["USDT", "DG", "BTC", "ETH"]
+exchange_rate_api = "https://api.coinbase.com/v2/exchange-rates"
+
+# 区块链配置
+[blockchain]
+trongrid_url = "https://api.trongrid.io"
+etherscan_url = "https://api.etherscan.io"
+confirmation_required = 12  # 生产环境需要更多确认
+fee_usdt = 1.0
+fee_eth = 0.005
+
+# 邮件配置 - 生产环境邮件服务
+[email]
+smtp_host = "smtp.sendgrid.net"
+smtp_port = 587
+smtp_user = "apikey"
+smtp_password = "your-sendgrid-api-key"
+from_address = "noreply@coin.com"
+from_name = "Coin Team"
+
+# 短信配置 - 生产环境短信服务
+[sms]
+provider = "aliyun"
+access_key = "your-production-access-key"
+access_secret = "your-production-access-secret"
+sign_name = "Coin平台"
+template_code = "SMS_PROD_123456789"
+
+# 安全配置
+[security]
+max_login_attempts = 5
+account_lock_duration = 1800
+rate_limit_per_minute = 100  # 生产环境提高限制
+rate_limit_burst = 20
+cors_origins = ["https://app.coin.com"]
+
+# 日志配置
+[logging]
+level = "warn"  # 生产环境使用更高级别
+format = "json"
+file = "/var/log/coin/app.log"
+max_file_size = "50MB"
+max_files = 10
+
+# 监控配置
+[monitoring]
+metrics_enabled = true
+metrics_port = 9090
+health_check_interval = 30
+
+# 空投配置
+[airdrop]
+max_participants_per_round = 10000  # 生产环境支持更多参与者
+success_rate_base = 0.85
+vip_bonus_rate = 0.25
+
+# 任务配置
+[tasks]
+acceleration_cost_per_hour = 50
+max_acceleration_hours = 24
+default_completion_hours = 2
+
+# 邀请配置
+[invite]
+direct_reward_rate = 0.1
+indirect_reward_rate = 0.05
+max_invite_levels = 3
+
+# KYC配置
+[kyc]
+upload_path = "/var/uploads/kyc"
+max_file_size = 10485760  # 10MB
+approval_auto_confidence = 0.95
+manual_review_threshold = 0.8

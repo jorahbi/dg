@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "\n            INSERT INTO orders (\n                order_id, user_id, power_package_id,\n                quantity, amount, blockchain_type, blockchain_address,\n                status, asset_pay, coin_pay\n            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 10
+    },
+    "nullable": []
+  },
+  "hash": "24164cc18cb5fc083de94d50054e7227ff7acaea26c41cf0373ceecabc1a27e1"
+}

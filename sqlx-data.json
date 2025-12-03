@@ -1,0 +1,62 @@
+{
+  "db": "MySQL",
+  "queries": {
+    "0e72a3123d765aa3d3fbf7a6da9a3b45d6f7c67bc96e45cb4b0c92a5722132bd": {
+      "query": "SELECT id, username, email, avatar_url, user_level, created_at, updated_at FROM users WHERE id = ?",
+      "describe": {
+        "columns": [
+          {
+            "name": "id",
+            "ordinal": 0,
+            "type": "UInt64"
+          },
+          {
+            "name": "username",
+            "ordinal": 1,
+            "type": "Varchar"
+          },
+          {
+            "name": "email",
+            "ordinal": 2,
+            "type": "Varchar"
+          },
+          {
+            "name": "avatar_url",
+            "ordinal": 3,
+            "type": "Varchar"
+          },
+          {
+            "name": "user_level",
+            "ordinal": 4,
+            "type": "UInt8"
+          },
+          {
+            "name": "created_at",
+            "ordinal": 5,
+            "type": "Timestamp"
+          },
+          {
+            "name": "updated_at",
+            "ordinal": 6,
+            "type": "Timestamp"
+          }
+        ],
+        "parameters": [
+          {
+            "ordinal": 0,
+            "type": "UInt64"
+          }
+        ],
+        "nullable": [
+          false,
+          true,
+          false,
+          true,
+          false,
+          false,
+          false
+        ]
+      }
+    }
+  }
+}

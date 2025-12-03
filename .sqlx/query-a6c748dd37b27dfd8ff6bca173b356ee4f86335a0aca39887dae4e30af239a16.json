@@ -1,0 +1,214 @@
+{
+  "db_name": "MySQL",
+  "query": "\n            SELECT\n                id, username as \"username: String\", password_hash as \"password_hash: String\", user_level,\n                invite_code as \"invite_code: String\", parent_inviter_id, inviter_id, total_assets, dg_amount,\n                is_kyc_verified, has_security_questions, upgrade_progress,\n                is_active, is_locked, login_attempts, locked_until,\n                qr_code_url as \"qr_code_url: String\", created_at, updated_at, last_login_at\n            FROM users\n            WHERE id = ?\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": {
+          "type": "LongLong",
+          "flags": "NOT_NULL | PRIMARY_KEY | UNSIGNED | AUTO_INCREMENT",
+          "max_size": 20
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "username: String",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | UNIQUE_KEY | BINARY | NO_DEFAULT_VALUE",
+          "max_size": 200
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "password_hash: String",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | BINARY | NO_DEFAULT_VALUE",
+          "max_size": 1020
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "user_level",
+        "type_info": {
+          "type": "Tiny",
+          "flags": "NOT_NULL | MULTIPLE_KEY | UNSIGNED",
+          "max_size": 3
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "invite_code: String",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | UNIQUE_KEY | BINARY | NO_DEFAULT_VALUE",
+          "max_size": 80
+        }
+      },
+      {
+        "ordinal": 5,
+        "name": "parent_inviter_id",
+        "type_info": {
+          "type": "LongLong",
+          "flags": "NOT_NULL | UNSIGNED",
+          "max_size": 20
+        }
+      },
+      {
+        "ordinal": 6,
+        "name": "inviter_id",
+        "type_info": {
+          "type": "LongLong",
+          "flags": "NOT_NULL | MULTIPLE_KEY | UNSIGNED | NO_DEFAULT_VALUE",
+          "max_size": 20
+        }
+      },
+      {
+        "ordinal": 7,
+        "name": "total_assets",
+        "type_info": {
+          "type": "NewDecimal",
+          "flags": "NOT_NULL",
+          "max_size": 22
+        }
+      },
+      {
+        "ordinal": 8,
+        "name": "dg_amount",
+        "type_info": {
+          "type": "NewDecimal",
+          "flags": "NOT_NULL",
+          "max_size": 22
+        }
+      },
+      {
+        "ordinal": 9,
+        "name": "is_kyc_verified",
+        "type_info": {
+          "type": "Tiny",
+          "flags": "NOT_NULL",
+          "max_size": 1
+        }
+      },
+      {
+        "ordinal": 10,
+        "name": "has_security_questions",
+        "type_info": {
+          "type": "Tiny",
+          "flags": "NOT_NULL",
+          "max_size": 1
+        }
+      },
+      {
+        "ordinal": 11,
+        "name": "upgrade_progress",
+        "type_info": {
+          "type": "Long",
+          "flags": "NOT_NULL",
+          "max_size": 11
+        }
+      },
+      {
+        "ordinal": 12,
+        "name": "is_active",
+        "type_info": {
+          "type": "Tiny",
+          "flags": "NOT_NULL | MULTIPLE_KEY",
+          "max_size": 1
+        }
+      },
+      {
+        "ordinal": 13,
+        "name": "is_locked",
+        "type_info": {
+          "type": "Tiny",
+          "flags": "NOT_NULL",
+          "max_size": 1
+        }
+      },
+      {
+        "ordinal": 14,
+        "name": "login_attempts",
+        "type_info": {
+          "type": "Tiny",
+          "flags": "NOT_NULL | UNSIGNED",
+          "max_size": 3
+        }
+      },
+      {
+        "ordinal": 15,
+        "name": "locked_until",
+        "type_info": {
+          "type": "Timestamp",
+          "flags": "BINARY",
+          "max_size": 19
+        }
+      },
+      {
+        "ordinal": 16,
+        "name": "qr_code_url: String",
+        "type_info": {
+          "type": "VarString",
+          "flags": "BINARY",
+          "max_size": 2000
+        }
+      },
+      {
+        "ordinal": 17,
+        "name": "created_at",
+        "type_info": {
+          "type": "Timestamp",
+          "flags": "NOT_NULL | MULTIPLE_KEY | BINARY | TIMESTAMP",
+          "max_size": 19
+        }
+      },
+      {
+        "ordinal": 18,
+        "name": "updated_at",
+        "type_info": {
+          "type": "Timestamp",
+          "flags": "NOT_NULL | BINARY | TIMESTAMP | ON_UPDATE_NOW",
+          "max_size": 19
+        }
+      },
+      {
+        "ordinal": 19,
+        "name": "last_login_at",
+        "type_info": {
+          "type": "Timestamp",
+          "flags": "BINARY",
+          "max_size": 19
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "a6c748dd37b27dfd8ff6bca173b356ee4f86335a0aca39887dae4e30af239a16"
+}

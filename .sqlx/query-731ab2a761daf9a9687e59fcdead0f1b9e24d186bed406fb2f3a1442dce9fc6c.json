@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "\n            UPDATE user_power\n            SET status = ?, updated_at = ? WHERE user_id = ? AND id = ?\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": []
+  },
+  "hash": "731ab2a761daf9a9687e59fcdead0f1b9e24d186bed406fb2f3a1442dce9fc6c"
+}

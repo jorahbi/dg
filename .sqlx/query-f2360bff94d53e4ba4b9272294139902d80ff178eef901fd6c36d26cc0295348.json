@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "\n                INSERT INTO user_security_questions (user_id, question_id, answer_hash, created_at, updated_at)\n                VALUES (?, ?, ?, NOW(3), NOW(3))\n                ON DUPLICATE KEY UPDATE\n                    answer_hash = VALUES(answer_hash),\n                    updated_at = NOW(3)\n                ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "f2360bff94d53e4ba4b9272294139902d80ff178eef901fd6c36d26cc0295348"
+}

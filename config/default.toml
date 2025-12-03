@@ -1,0 +1,119 @@
+[server]
+host = "0.0.0.0"
+port = 8080
+workers = 4
+keep_alive = 75
+timeout = 30
+
+# 数据库配置
+[database]
+url = "mysql://root:password@localhost:3306/coin_dgai"
+max_connections = 20
+min_connections = 5
+connect_timeout = 30
+idle_timeout = 600
+max_lifetime = 1800
+
+# Redis配置
+[redis]
+url = "redis://localhost:6379"
+pool_size = 10
+connection_timeout = 30
+command_timeout = 5
+
+# JWT配置
+[jwt]
+secret = "your-super-secret-jwt-key-change-in-production"
+expiration = 86400  # 24小时
+refresh_expiration = 604800  # 7天
+issuer = "coin-dgai-api"
+
+# 密码加密配置
+[password]
+salt_length = 32
+rounds = 12
+
+# 文件上传配置
+[upload]
+max_file_size = 5242880  # 5MB
+allowed_types = ["image/jpeg", "image/png", "image/gif"]
+upload_path = "./uploads"
+cdn_url = "https://cdn.example.com"
+
+# 加密货币配置
+[crypto]
+default_currency = "USDT"
+supported_currencies = ["USDT", "DG", "BTC", "ETH"]
+exchange_rate_api = "https://api.coinbase.com/v2/exchange-rates"
+
+# 区块链配置
+[blockchain]
+trongrid_url = "https://api.trongrid.io"
+etherscan_url = "https://api.etherscan.io"
+confirmation_required = 6
+fee_usdt = 1.0  # USDT提现手续费
+fee_eth = 0.005  # ETH提现手续费
+
+# 邮件配置
+[email]
+smtp_host = "smtp.gmail.com"
+smtp_port = 587
+smtp_user = "noreply@coin.com"
+smtp_password = "your-smtp-password"
+from_address = "noreply@coin.com"
+from_name = "Coin Team"
+
+# 短信配置
+[sms]
+provider = "aliyun"
+access_key = "your-access-key"
+access_secret = "your-access-secret"
+sign_name = "Coin平台"
+template_code = "SMS_123456789"
+
+# 安全配置
+[security]
+max_login_attempts = 5
+account_lock_duration = 1800  # 30分钟
+rate_limit_per_minute = 60
+rate_limit_burst = 10
+cors_origins = ["http://localhost:3000"]
+
+# 日志配置
+[logging]
+level = "info"
+format = "json"
+file = "./logs/app.log"
+max_file_size = "10MB"
+max_files = 5
+
+# 监控配置
+[monitoring]
+metrics_enabled = true
+metrics_port = 9090
+health_check_interval = 30
+
+# 空投配置
+[airdrop]
+max_participants_per_round = 1000
+success_rate_base = 0.8  # 基础成功率
+vip_bonus_rate = 0.2     # VIP用户额外成功率
+
+# 任务配置
+[tasks]
+acceleration_cost_per_hour = 50  # 每小时加速消耗积分
+max_acceleration_hours = 24      # 最大加速小时数
+default_completion_hours = 2     # 默认任务完成小时数
+
+# 邀请配置
+[invite]
+direct_reward_rate = 0.1    # 直接邀请奖励比例
+indirect_reward_rate = 0.05 # 间接邀请奖励比例
+max_invite_levels = 3       # 最大邀请层级
+
+# KYC配置
+[kyc]
+upload_path = "./uploads/kyc"
+max_file_size = 10485760  # 10MB
+approval_auto_confidence = 0.95
+manual_review_threshold = 0.8

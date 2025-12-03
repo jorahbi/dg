@@ -1,0 +1,194 @@
+{
+  "db_name": "MySQL",
+  "query": "\n            SELECT\n                id, user_id, transaction_id as \"transaction_id: String\",\n                types as \"types: String\", from_currency as \"from_currency: String\",\n                to_currency as \"to_currency: String\", amount, fee, exchange_rate,\n                status as \"status: String\", blockchain_type as \"blockchain_type: String\",\n                from_address as \"from_address: String\", to_address as \"to_address: String\",\n                description as \"description: String\", completed_at, created_at, updated_at,\n                metadata\n            FROM transactions\n            WHERE transaction_id = ?\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": {
+          "type": "LongLong",
+          "flags": "NOT_NULL | PRIMARY_KEY | UNSIGNED | AUTO_INCREMENT",
+          "max_size": 20
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "user_id",
+        "type_info": {
+          "type": "LongLong",
+          "flags": "NOT_NULL | MULTIPLE_KEY | UNSIGNED | NO_DEFAULT_VALUE",
+          "max_size": 20
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "transaction_id: String",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | UNIQUE_KEY | BINARY | NO_DEFAULT_VALUE",
+          "max_size": 256
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "types: String",
+        "type_info": {
+          "type": "String",
+          "flags": "NOT_NULL | MULTIPLE_KEY | BINARY | ENUM | NO_DEFAULT_VALUE",
+          "max_size": 60
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "from_currency: String",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | MULTIPLE_KEY | BINARY",
+          "max_size": 80
+        }
+      },
+      {
+        "ordinal": 5,
+        "name": "to_currency: String",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | BINARY",
+          "max_size": 80
+        }
+      },
+      {
+        "ordinal": 6,
+        "name": "amount",
+        "type_info": {
+          "type": "NewDecimal",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "max_size": 22
+        }
+      },
+      {
+        "ordinal": 7,
+        "name": "fee",
+        "type_info": {
+          "type": "NewDecimal",
+          "flags": "NOT_NULL",
+          "max_size": 22
+        }
+      },
+      {
+        "ordinal": 8,
+        "name": "exchange_rate",
+        "type_info": {
+          "type": "NewDecimal",
+          "flags": "NOT_NULL",
+          "max_size": 22
+        }
+      },
+      {
+        "ordinal": 9,
+        "name": "status: String",
+        "type_info": {
+          "type": "String",
+          "flags": "NOT_NULL | BINARY | ENUM",
+          "max_size": 40
+        }
+      },
+      {
+        "ordinal": 10,
+        "name": "blockchain_type: String",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | BINARY",
+          "max_size": 80
+        }
+      },
+      {
+        "ordinal": 11,
+        "name": "from_address: String",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | BINARY",
+          "max_size": 1020
+        }
+      },
+      {
+        "ordinal": 12,
+        "name": "to_address: String",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | BINARY",
+          "max_size": 1020
+        }
+      },
+      {
+        "ordinal": 13,
+        "name": "description: String",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | BINARY",
+          "max_size": 8000
+        }
+      },
+      {
+        "ordinal": 14,
+        "name": "completed_at",
+        "type_info": {
+          "type": "Timestamp",
+          "flags": "BINARY",
+          "max_size": 19
+        }
+      },
+      {
+        "ordinal": 15,
+        "name": "created_at",
+        "type_info": {
+          "type": "Timestamp",
+          "flags": "NOT_NULL | MULTIPLE_KEY | BINARY | TIMESTAMP",
+          "max_size": 19
+        }
+      },
+      {
+        "ordinal": 16,
+        "name": "updated_at",
+        "type_info": {
+          "type": "Timestamp",
+          "flags": "NOT_NULL | BINARY | TIMESTAMP | ON_UPDATE_NOW",
+          "max_size": 19
+        }
+      },
+      {
+        "ordinal": 17,
+        "name": "metadata",
+        "type_info": {
+          "type": "Json",
+          "flags": "BLOB | BINARY",
+          "max_size": 4294967295
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "e1577e3628c23d1dd36f158ebd3d23915463754794b17dec52f32e788e99364a"
+}

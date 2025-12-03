@@ -1,0 +1,134 @@
+{
+  "db_name": "MySQL",
+  "query": "\n            SELECT\n                ur.id, ur.power_package_id, order_id as \"order_id: String\", ur.types, ur.amount, ur.start_time,\n                ur.status, ur.earnings, pp.title, pp.lv, pp.daily_yield_percentage, pp.description\n            FROM user_power as ur\n            LEFT JOIN power_packages as pp ON ur.power_package_id = pp.id\n            WHERE ur.user_id = ?\n            ORDER BY ur.created_at DESC\n            LIMIT ? OFFSET ?\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": {
+          "type": "LongLong",
+          "flags": "NOT_NULL | PRIMARY_KEY | UNSIGNED | AUTO_INCREMENT",
+          "max_size": 20
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "power_package_id",
+        "type_info": {
+          "type": "LongLong",
+          "flags": "NOT_NULL | MULTIPLE_KEY | UNSIGNED | NO_DEFAULT_VALUE",
+          "max_size": 20
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "order_id: String",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | MULTIPLE_KEY | BINARY | NO_DEFAULT_VALUE",
+          "max_size": 200
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "types",
+        "type_info": {
+          "type": "Short",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "max_size": 6
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "amount",
+        "type_info": {
+          "type": "NewDecimal",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "max_size": 22
+        }
+      },
+      {
+        "ordinal": 5,
+        "name": "start_time",
+        "type_info": {
+          "type": "Timestamp",
+          "flags": "MULTIPLE_KEY | BINARY",
+          "max_size": 19
+        }
+      },
+      {
+        "ordinal": 6,
+        "name": "status",
+        "type_info": {
+          "type": "Short",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "max_size": 6
+        }
+      },
+      {
+        "ordinal": 7,
+        "name": "earnings",
+        "type_info": {
+          "type": "NewDecimal",
+          "flags": "NOT_NULL",
+          "max_size": 22
+        }
+      },
+      {
+        "ordinal": 8,
+        "name": "title",
+        "type_info": {
+          "type": "Json",
+          "flags": "BLOB | BINARY | NO_DEFAULT_VALUE",
+          "max_size": 4294967295
+        }
+      },
+      {
+        "ordinal": 9,
+        "name": "lv",
+        "type_info": {
+          "type": "Short",
+          "flags": "UNSIGNED",
+          "max_size": 5
+        }
+      },
+      {
+        "ordinal": 10,
+        "name": "daily_yield_percentage",
+        "type_info": {
+          "type": "NewDecimal",
+          "flags": "NO_DEFAULT_VALUE",
+          "max_size": 12
+        }
+      },
+      {
+        "ordinal": 11,
+        "name": "description",
+        "type_info": {
+          "type": "Json",
+          "flags": "BLOB | BINARY | NO_DEFAULT_VALUE",
+          "max_size": 4294967295
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  "hash": "271faab1d8238a3da3b04f01c39858ed57b83e764a748e43ff22d246422ad728"
+}

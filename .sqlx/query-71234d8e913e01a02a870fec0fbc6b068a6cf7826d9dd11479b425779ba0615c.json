@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "\n            INSERT INTO system_configs (\n                config_key, config_value, description, created_at, updated_at\n            ) VALUES (?, ?, ?, ?, ?)\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 5
+    },
+    "nullable": []
+  },
+  "hash": "71234d8e913e01a02a870fec0fbc6b068a6cf7826d9dd11479b425779ba0615c"
+}

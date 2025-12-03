@@ -1,0 +1,37 @@
+// Project-local debug tasks
+//
+// For more documentation on how to configure debug tasks,
+// see: https://zed.dev/docs/debugger
+[
+  {
+    "build": {
+      "command": "cargo build ",
+      "args": [
+        "build",
+        "-gcflags",
+        "all=-N",
+        "-o",
+        "${ZED_WORKTREE_ROOT}/cmd/mcp.exe",
+        "./cmd"
+      ],
+      "cwd": "${ZED_WORKTREE_ROOT}",
+      "show_command": true
+    },
+    "mode": "exec",
+    "cwd": "${ZED_WORKTREE_ROOT}",
+    "program": "${ZED_WORKTREE_ROOT}/cmd/mcp.exe",
+    "args": ["-f", "${ZED_WORKTREE_ROOT}/etc/mcp.yaml"],
+    "adapter": "lldb",
+    "request": "launch",
+    "label": "build_debug"
+  },
+  {
+    "mode": "exec",
+    "cwd": "${ZED_WORKTREE_ROOT}",
+    "program": "${ZED_WORKTREE_ROOT}/cmd/mcp.exe",
+    "args": ["-f", "${ZED_WORKTREE_ROOT}/etc/mcp.yaml"],
+    "adapter": "lldb",
+    "request": "launch",
+    "label": "debug"
+  }
+]

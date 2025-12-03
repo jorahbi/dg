@@ -1,0 +1,24 @@
+{
+  "db_name": "MySQL",
+  "query": "\n                SELECT COUNT(*) FROM system_configs\n                WHERE config_key = ? AND id != ?\n                ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "COUNT(*)",
+        "type_info": {
+          "type": "LongLong",
+          "flags": "NOT_NULL | BINARY",
+          "max_size": 21
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "b5f42925b1881378900c08d227866462c45970c5c95cd028335ee3059e783b75"
+}

@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "\n        UPDATE users SET total_assets = ?, updated_at = NOW()\n        WHERE id = ? AND total_assets = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "77b72d31c47c597fa5d30b653e2348b955dd3980b2d230b8b0f54b10d5ede8e3"
+}

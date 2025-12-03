@@ -1,0 +1,111 @@
+version: '3.8'
+
+services:
+  # Astra AI API 服务
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: astra-ai-api
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - APP_SERVER__HOST=0.0.0.0
+      - APP_SERVER__PORT=8080
+      - APP_SERVER__WORKERS=4
+      - APP_DATABASE__URL=mysql://root:${MYSQL_ROOT_PASSWORD}@mysql:3306/coin_dgai
+      - APP_DATABASE__MAX_CONNECTIONS=20
+      - APP_DATABASE__MIN_CONNECTIONS=5
+      - APP_JWT__SECRET=${JWT_SECRET}
+      - APP_JWT__EXPIRATION=86400
+      - APP_JWT__ISSUER=coin-dgai-api
+      - APP_JWT__AUDIENCE=coin-dgai-users
+      - APP_UPLOAD__MAX_FILE_SIZE=5242880
+      - APP_UPLOAD__UPLOAD_PATH=/app/uploads
+      - APP_UPLOAD__BASE_URL=http://localhost:8080/uploads
+      - APP_SECURITY__BCRYPT_COST=12
+      - APP_SECURITY__PASSWORD_MIN_LENGTH=8
+      - APP_APP__NAME=Astra Ai API
+      - APP_APP__VERSION=1.0.0
+      - APP_APP__ENVIRONMENT=production
+      - APP_APP__LOG_LEVEL=info
+    volumes:
+      - ./uploads:/app/uploads
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - astra-ai-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # MySQL 数据库
+  mysql:
+    image: mysql:8.0
+    container_name: astra-ai-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: coin_dgai
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./migrations:/docker-entrypoint-initdb.d
+    networks:
+      - astra-ai-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    command: --default-authentication-plugin=mysql_native_password
+
+  # Redis 缓存（可选）
+  redis:
+    image: redis:7-alpine
+    container_name: astra-ai-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - astra-ai-network
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+
+  # Nginx 反向代理（可选）
+  nginx:
+    image: nginx:alpine
+    container_name: astra-ai-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - api
+    networks:
+      - astra-ai-network
+
+# 网络配置
+networks:
+  astra-ai-network:
+    driver: bridge
+
+# 数据卷配置
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local

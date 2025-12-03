@@ -1,0 +1,34 @@
+{
+  "db_name": "MySQL",
+  "query": "\n            SELECT sq.id, sq.question as \"question: String\"\n            FROM security_questions sq\n            LEFT JOIN user_security_questions usq ON sq.id = usq.question_id\n            LEFT JOIN users on users.id = usq.user_id\n            WHERE users.username = ? AND sq.is_active = 1\n            ORDER BY sq.sort_order ASC\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": {
+          "type": "Long",
+          "flags": "NOT_NULL | PRIMARY_KEY | UNSIGNED | AUTO_INCREMENT",
+          "max_size": 11
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "question: String",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | BINARY | NO_DEFAULT_VALUE",
+          "max_size": 2000
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "2e9422111158f8e7c2f82939bd5669e5bae22e1211e8e780e2451b9c1e40c7f9"
+}

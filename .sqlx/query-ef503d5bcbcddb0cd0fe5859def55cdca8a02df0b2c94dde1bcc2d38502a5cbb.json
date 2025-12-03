@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "\n            INSERT INTO users (\n                username, password_hash, user_level,\n                invite_code, inviter_id, parent_inviter_id, total_assets, dg_amount,\n                is_kyc_verified, has_security_questions,\n                is_active, is_locked, login_attempts, qr_code_url,\n                created_at, updated_at\n            ) VALUES (\n                ?, ?, ?,\n                ?, ?, ?, ?, ?,\n                ?, ?,\n                ?, ?, ?, ?,\n                NOW(), NOW()\n            )\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 14
+    },
+    "nullable": []
+  },
+  "hash": "ef503d5bcbcddb0cd0fe5859def55cdca8a02df0b2c94dde1bcc2d38502a5cbb"
+}

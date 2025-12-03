@@ -1,0 +1,122 @@
+# 测试环境配置
+
+# 服务器配置
+[server]
+host = "127.0.0.1"
+port = 0  # 随机端口
+workers = 1
+max_connections = 100
+timeout = 30
+keep_alive = 75
+
+# 测试数据库配置
+[database]
+url = "mysql://root:password@localhost:3306/coin_dgai_test"
+max_connections = 5
+min_connections = 1
+connect_timeout = 10
+idle_timeout = 300
+max_lifetime = 600
+
+# 测试Redis配置
+[redis]
+url = "redis://localhost:6379/1"  # 使用数据库1避免污染生产数据
+pool_size = 2
+connection_timeout = 10
+command_timeout = 2
+
+# JWT配置 - 测试环境使用简单密钥
+[jwt]
+secret = "test-secret-key-for-testing-only"
+expiration = 3600  # 1小时，便于测试
+refresh_expiration = 7200  # 2小时
+issuer = "coin-dgai-api-test"
+
+# 密码加密配置 - 测试环境使用较少轮数以提高速度
+[password]
+salt_length = 16
+rounds = 4  # 测试环境使用较少轮数
+
+# 文件上传配置
+[upload]
+max_file_size = 1048576  # 1MB
+allowed_types = ["image/jpeg", "image/png", "image/gif"]
+upload_path = "./tmp/uploads"
+cdn_url = "http://localhost:8080/uploads"
+
+# 加密货币配置
+[crypto]
+default_currency = "USDT"
+supported_currencies = ["USDT", "DG"]
+exchange_rate_api = "https://api.coinbase.com/v2/exchange-rates"
+
+# 区块链配置 - 使用测试网
+[blockchain]
+trongrid_url = "https://api.shasta.trongrid.io"
+etherscan_url = "https://api-sepolia.etherscan.io"
+confirmation_required = 2  # 测试网需要较少确认
+fee_usdt = 0.1
+fee_eth = 0.001
+
+# 邮件配置 - 测试环境禁用实际发送
+[email]
+smtp_host = "localhost"
+smtp_port = 1025
+smtp_user = "test@coin.com"
+smtp_password = "test"
+from_address = "test@coin.com"
+from_name = "Coin Test"
+
+# 短信配置 - 测试环境禁用实际发送
+[sms]
+provider = "mock"
+access_key = "test-key"
+access_secret = "test-secret"
+sign_name = "Coin测试"
+template_code = "TEST_SMS"
+
+# 安全配置
+[security]
+max_login_attempts = 10  # 测试环境提高尝试次数
+account_lock_duration = 300  # 5分钟
+rate_limit_per_minute = 1000  # 测试环境大幅提高限制
+rate_limit_burst = 100
+cors_origins = ["*"]  # 测试环境允许所有来源
+
+# 日志配置
+[logging]
+level = "debug"  # 测试环境使用debug级别
+format = "pretty"
+file = "./tmp/test.log"
+max_file_size = "1MB"
+max_files = 3
+
+# 监控配置
+[monitoring]
+metrics_enabled = false  # 测试环境禁用metrics
+health_check_interval = 10
+
+# 空投配置
+[airdrop]
+max_participants_per_round = 10  # 测试环境使用较小的数字
+success_rate_base = 1.0  # 测试环境100%成功率
+vip_bonus_rate = 0.5
+
+# 任务配置
+[tasks]
+acceleration_cost_per_hour = 1  # 测试环境降低积分消耗
+max_acceleration_hours = 2
+default_completion_hours = 0.1  # 6分钟，便于快速测试
+
+# 邀请配置
+[invite]
+direct_reward_rate = 0.2  # 测试环境提高奖励比例
+indirect_reward_rate = 0.1
+max_invite_levels = 2
+
+# KYC配置
+[kyc]
+upload_path = "./tmp/kyc"
+max_file_size = 1048576  # 1MB
+approval_auto_confidence = 0.8  # 测试环境降低自动通过阈值
+manual_review_threshold = 0.6

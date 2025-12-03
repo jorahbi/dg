@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "\n            DELETE FROM password_reset_tokens\n            WHERE username = ? AND is_used = 0 AND expires_at > NOW()\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": []
+  },
+  "hash": "081391ddc02c92cba6bda2ec72e325bbe821339f6ebc7dec5e7f4637d72c0786"
+}

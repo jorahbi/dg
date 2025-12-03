@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "\n            UPDATE password_reset_tokens\n            SET is_used = 1\n            WHERE username = ? AND is_used = 0\n            LIMIT 1\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": []
+  },
+  "hash": "5da5c6769fdb49f21a13e92404110545488d7f9596e1c2d8e8ec4af978490279"
+}

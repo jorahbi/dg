@@ -1,0 +1,106 @@
+[package]
+name = "coin-dgai-api"
+version = "1.0.0"
+edition = "2021"
+authors = ["Coin Team <team@coin.com>"]
+description = "Astra Ai - AI算力挖矿平台后端API服务"
+license = "MIT"
+
+[dependencies]
+# Web framework
+axum = { version = "0.7", features = ["macros", "ws", "multipart"] }
+tower = { version = "0.4", features = ["full"] }
+tower-http = { version = "0.5", features = ["fs", "cors", "trace"] }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+
+# Database
+sqlx = { version = "0.8.6", features = ["runtime-tokio-rustls", "mysql", "chrono", "uuid", "json", "rust_decimal", "migrate", "macros", "time"], default-features = false }
+
+
+# Authentication & Security
+jsonwebtoken = "9.0"
+bcrypt = "0.15"
+uuid = { version = "1.0", features = ["v4", "serde"] }
+
+# Time & Date
+chrono = { version = "0.4", features = ["serde"] }
+
+# Environment & Configuration
+dotenvy = "0.15"
+
+# Logging & Tracing
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Async runtime
+tokio = { version = "1.0", features = ["full"] }
+
+# WebSocket
+futures = "0.3"
+
+# Cron scheduling for periodic tasks
+tokio-cron-scheduler = "0.13"
+
+# Signal handling for graceful shutdown
+signal-hook = "0.3"
+signal-hook-tokio = { version = "0.3", features = ["futures-v0_3"] }
+
+# Validation
+validator = { version = "0.18", features = ["derive"] }
+
+# Error handling
+anyhow = "1.0"
+thiserror = "1.0"
+
+# Decimal for financial calculations
+rust_decimal = { version = "1.33", features = ["serde-float"] }
+
+# File upload
+mime_guess = "2.0"
+
+
+rand = "0.8"
+
+# QR Code generation
+qrcode = "0.14"
+image = { version = "0.25", features = ["png", "jpeg"] }
+base64 = "0.22"
+
+time = { version = "0.3.44", features = ["serde", "parsing", "formatting"] }
+bigdecimal = "0.4.9"
+strum = { version = "0.25.0", features = ["derive"] }
+rs-snowflake = "0.6.0"
+derive_builder = {version = "0.20", features = ["std"]}
+dashmap = "6.1.0"
+
+# Development dependencies (dev-only)
+[dev-dependencies]
+
+tower-http = { version = "0.5", features = ["trace"] }
+
+# Binary configuration
+[[bin]]
+name = "server"
+path = "src/main.rs"
+
+# Profile settings
+[profile.dev]
+debug = true
+overflow-checks = true
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+
+# Workspace for potential future expansion
+[workspace]
+members = [
+    ".",
+    # Add additional crates here as needed
+]

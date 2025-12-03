@@ -1,0 +1,1238 @@
+{
+  "info": {
+    "name": "Coin项目API接口文档",
+    "description": "Coin项目提供完整的RESTful API接口，支持用户认证、算力管理、空投活动、资产管理等核心功能。\n\n## 基础信息\n- **API版本**: v1\n- **基础URL**: https://api.example.com\n- **认证方式**: Bearer Token\n\n## 请求头要求\n- Content-Type: application/json\n- Authorization: Bearer {{token}}\n- Accept: application/json\n\n## 测试账号\n- demo / demo12345\n- user / password123\n\n## 通用响应格式\n```json\n{\n  \"code\": 200,\n  \"message\": \"success\",\n  \"data\": {},\n  \"timestamp\": \"2025-11-23T17:59:00.000Z\"\n}\n```",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.example.com",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// 全局预请求脚本",
+          "console.log('执行全局预请求脚本');"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// 全局测试脚本",
+          "pm.test('响应时间小于3秒', function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+          "});",
+          "",
+          "pm.test('状态码为200', function () {",
+          "    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+          "});"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "1. 认证管理模块",
+      "item": [
+        {
+          "name": "用户注册",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"test_user\",\n  \"password\": \"password123\",\n  \"confirmPassword\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "用户登录",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"demo\",\n  \"password\": \"demo12345\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// 登录成功后保存token",
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.data && response.data.token) {",
+                  "        pm.collectionVariables.set('token', response.data.token);",
+                  "        pm.collectionVariables.set('username', response.data.username);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "获取安全问题列表",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/security-questions",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "security-questions"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "保存安全问题答案",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"test_user\",\n  \"questions\": [\n    {\n      \"questionId\": 1,\n      \"answer\": \"我的宠物名字\"\n    },\n    {\n      \"questionId\": 2,\n      \"answer\": \"我的出生城市\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/security-questions",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "security-questions"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "检查密保问题设置状态",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/security-questions/check",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "security-questions", "check"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "获取用户密保问题",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"test_user\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/forgot-password/questions",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "forgot-password", "questions"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "验证密保问题答案",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"test_user\",\n  \"answers\": [\n    {\n      \"questionId\": 1,\n      \"answer\": \"我的宠物名字\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/forgot-password/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "forgot-password", "verify"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "重置密码",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"test_user\",\n  \"newPassword\": \"newpassword123\",\n  \"resetToken\": \"reset_token_1234567890\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/forgot-password/reset",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "forgot-password", "reset"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "用户登出",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"{{token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "logout"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// 登出后清除token",
+                  "if (pm.response.code === 200) {",
+                  "    pm.collectionVariables.set('token', '');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. 用户管理模块",
+      "item": [
+        {
+          "name": "获取用户信息",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/user/info",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "user", "info"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "获取用户资料",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/user/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "user", "profile"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "更新头像",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "avatar",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/user/profile/avatar",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "user", "profile", "avatar"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "修改密码",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"oldpassword123\",\n  \"newPassword\": \"newpassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/user/profile/password",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "user", "profile", "password"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "获取新手福利信息",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/user/new-user-benefit",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "user", "new-user-benefit"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "领取新手福利",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/user/new-user-benefit/claim",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "user", "new-user-benefit", "claim"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. 算力管理模块",
+      "item": [
+        {
+          "name": "获取用户Power信息",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/power/info",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "power", "info"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "获取用户等级列表",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/power/levels",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "power", "levels"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "获取算力记录",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/power/records?page=1&limit=20&powerType=AI智能计算&status=active",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "power", "records"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "powerType",
+                  "value": "AI智能计算"
+                },
+                {
+                  "key": "status",
+                  "value": "active"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "升级等级",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"targetLevel\": 8\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/power/upgrade",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "power", "upgrade"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "提交提现请求",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": \"100.00\",\n  \"currency\": \"USDT\",\n  \"destinationAddress\": \"TRX742d35Cc6634C0532925a3b844Bc454e4438f33e\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/power/withdraw",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "power", "withdraw"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "获取提现详情",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/power/withdrawals/withdrawal_1234567890",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "power", "withdrawals", "withdrawal_1234567890"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "取消提现请求",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/power/withdrawals/withdrawal_1234567890/cancel",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "power", "withdrawals", "withdrawal_1234567890", "cancel"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. 购买管理模块",
+      "item": [
+        {
+          "name": "获取算力详情",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/power/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "power", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "提交购买订单",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"powerId\": 1,\n  \"quantity\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/purchase/order",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "purchase", "order"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "获取订单详情",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/purchase/orders/ORD_1234567890",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "purchase", "orders", "ORD_1234567890"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "取消订单",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/purchase/orders/ORD_1234567890/cancel",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "purchase", "orders", "ORD_1234567890", "cancel"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5. 收益管理模块",
+      "item": [
+        {
+          "name": "获取收益数据",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/earnings?start_date=2025-11-01&end_date=2025-11-30&page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "earnings"],
+              "query": [
+                {
+                  "key": "start_date",
+                  "value": "2025-11-01"
+                },
+                {
+                  "key": "end_date",
+                  "value": "2025-11-30"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "6. 空投活动模块",
+      "item": [
+        {
+          "name": "获取空投列表",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/airdrops",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "airdrops"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "抢空投",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"airdropId\": 1,\n  \"currentRound\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/airdrops/claim",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "airdrops", "claim"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "获取空投历史记录",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/airdrops/history?page=1&limit=20&type=daily",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "airdrops", "history"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "type",
+                  "value": "daily"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "7. 任务管理模块",
+      "item": [
+        {
+          "name": "获取任务列表",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks?page=1&pageSize=10&type=AI智能计算",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tasks"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10"
+                },
+                {
+                  "key": "type",
+                  "value": "AI智能计算"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "开始任务",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/1/start",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tasks", "1", "start"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "加速任务",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accelerationHours\": 2,\n  \"pointsCost\": 100\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/1/accelerate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tasks", "1", "accelerate"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "8. 邀请奖励模块",
+      "item": [
+        {
+          "name": "获取邀请奖励列表",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/invite/rewards",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "invite", "rewards"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "获取邀请码",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/invite/code",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "invite", "code"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "获取邀请记录",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/invite/records?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "invite", "records"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "9. 资产中心模块",
+      "item": [
+        {
+          "name": "获取充值记录",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/asset/recharge-records?page=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "asset", "recharge-records"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "获取兑换记录",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/asset/conversion-records?page=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "asset", "conversion-records"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "执行货币兑换",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromCurrency\": \"USDT\",\n  \"toCurrency\": \"DG\",\n  \"amount\": 100.00\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/asset/exchange",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "asset", "exchange"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "获取支持的区块链类型",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/asset/supported-blockchains",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "asset", "supported-blockchains"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "提交提现请求",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": \"100.00\",\n  \"blockchainCode\": \"TRC20\",\n  \"address\": \"0x1234567890abcdef\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/asset/withdraw",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "asset", "withdraw"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "10. 消息中心模块",
+      "item": [
+        {
+          "name": "获取收件箱消息列表",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inbox/messages?page=1&limit=20&type=system",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inbox", "messages"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "type",
+                  "value": "system"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "标记消息为已读",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inbox/messages/1/read",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inbox", "messages", "1", "read"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "标记所有消息为已读",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inbox/messages/read-all",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inbox", "messages", "read-all"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "删除消息",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inbox/messages/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inbox", "messages", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "获取未读消息数量",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inbox/messages/unread-count",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inbox", "messages", "unread-count"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "11. 图表数据模块",
+      "item": [
+        {
+          "name": "获取K线图数据",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/chart/kline?symbol=BTC/USDT&interval=1h&page=1&limit=500",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "chart", "kline"],
+              "query": [
+                {
+                  "key": "symbol",
+                  "value": "BTC/USDT"
+                },
+                {
+                  "key": "interval",
+                  "value": "1h"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "500"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "获取实时价格信息",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/ticker/price?symbol=BTC/USDT",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "ticker", "price"],
+              "query": [
+                {
+                  "key": "symbol",
+                  "value": "BTC/USDT"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "获取支持的货币对列表",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/markets",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "markets"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "12. 首页数据模块",
+      "item": [
+        {
+          "name": "获取轮播图数据",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/home/carousel",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "home", "carousel"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "获取统计数据",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/home/statistics",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "home", "statistics"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "13. 限时优惠模块",
+      "item": [
+        {
+          "name": "获取限时优惠套餐列表",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/promotion/packages?isActive=true",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "promotion", "packages"],
+              "query": [
+                {
+                  "key": "isActive",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "14. KYC认证模块",
+      "item": [
+        {
+          "name": "上传身份证图片",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": []
+                },
+                {
+                  "key": "type",
+                  "value": "front",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "id_card",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/kyc/upload-id-card",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "kyc", "upload-id-card"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "提交KYC认证",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"张三\",\n  \"idNumber\": \"110101199001011234\",\n  \"idCardFrontUrl\": \"https://api.example.com/images/id_card_front_123456.png\",\n  \"idCardBackUrl\": \"https://api.example.com/images/id_card_back_123456.png\",\n  \"selfieUrl\": \"https://api.example.com/images/selfie_123456.png\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/kyc/submit",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "kyc", "submit"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "获取KYC状态",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/kyc/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "kyc", "status"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "15. 节点统计模块",
+      "item": [
+        {
+          "name": "获取节点统计数据",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/node-stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "node-stats"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "刷新节点统计数据",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/node-stats/refresh",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "node-stats", "refresh"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "17. 关于我们模块",
+      "item": [
+        {
+          "name": "获取关于我们信息",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/about-us",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "about-us"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

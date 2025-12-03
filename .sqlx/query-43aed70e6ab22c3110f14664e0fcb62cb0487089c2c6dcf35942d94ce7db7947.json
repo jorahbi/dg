@@ -1,0 +1,24 @@
+{
+  "db_name": "MySQL",
+  "query": "SELECT has_security_questions FROM users WHERE id = ?",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "has_security_questions",
+        "type_info": {
+          "type": "Tiny",
+          "flags": "NOT_NULL",
+          "max_size": 1
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "43aed70e6ab22c3110f14664e0fcb62cb0487089c2c6dcf35942d94ce7db7947"
+}

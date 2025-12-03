@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "\n            UPDATE orders\n            SET status = ?,\n                updated_at = ?\n            WHERE order_id = ?\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "4ed6d7d037c425770d0dc5c312cf42e6dd26ab73538fac501f8484bede8bb852"
+}
