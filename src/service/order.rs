@@ -9,10 +9,9 @@ use crate::repository::{InviteRepo, SystemConfigRepo, TransactionsRepo, UserRepo
 use crate::utils::gen::generate_no;
 use crate::utils::time_zone::TimeZone;
 use crate::{error::Result, repository::OrderRepo, state::AppState, AppError};
-use bigdecimal::ToPrimitive;
+use rust_decimal::prelude::ToPrimitive;
 use rust_decimal::Decimal;
 use sqlx::MySqlConnection;
-use std::collections::HashMap;
 
 pub struct OrderService {
     db: sqlx::MySqlPool,
@@ -44,7 +43,10 @@ impl OrderService {
         // 提交事务
         match tx.commit().await {
             Ok(_) => Ok(order), // 提交成功
-            Err(e) => Err(AppError::Internal(format!("Transaction commit failed: {}", e))),
+            Err(e) => Err(AppError::Internal(format!(
+                "Transaction commit failed: {}",
+                e
+            ))),
         }
     }
 
@@ -75,7 +77,10 @@ impl OrderService {
             Ok(order) => order,
             Err(err) => {
                 tx.rollback().await?;
-                return Err(AppError::Internal(format!("Order creation failed: {}", err)));
+                return Err(AppError::Internal(format!(
+                    "Order creation failed: {}",
+                    err
+                )));
             }
         };
 
@@ -83,7 +88,10 @@ impl OrderService {
         // 提交事务
         match tx.commit().await {
             Ok(_) => Ok(order), // 提交成功
-            Err(e) => Err(AppError::Internal(format!("Transaction commit failed: {}", e))),
+            Err(e) => Err(AppError::Internal(format!(
+                "Transaction commit failed: {}",
+                e
+            ))),
         }
     }
 
@@ -98,7 +106,10 @@ impl OrderService {
     ) -> Result<(u64, String)> {
         // 计算订单总金额
         let Some(package_amount) = power.amount.to_f64() else {
-            return Err(AppError::Internal(format!("Amount conversion failed for power ID {}", power.id)));
+            return Err(AppError::Internal(format!(
+                "Amount conversion failed for power ID {}",
+                power.id
+            )));
         };
         let total_amount = Decimal::new((package_amount * 1.0f64 * 100.0).round() as i64, 2);
         let mut asset_pay = Decimal::new(0, 2);
@@ -199,7 +210,9 @@ impl OrderService {
 
         // 验证订单状态（只有待支付的订单才能取消）
         if order.status != ORDER_STATUS_PENDING {
-            return Err(AppError::Business("Only pending orders can be cancelled".to_string()));
+            return Err(AppError::Business(
+                "Only pending orders can be cancelled".to_string(),
+            ));
         }
         let user = UserRepo::find_by_id(&self.db, order.user_id).await?;
         let mut tx = self.db.begin().await?;
@@ -262,7 +275,9 @@ impl OrderService {
 
         // 验证订单状态（只有待支付的订单才能付款）
         if order.status != ORDER_STATUS_PENDING {
-            return Err(AppError::Business("Only pending orders can be paid".to_string()));
+            return Err(AppError::Business(
+                "Only pending orders can be paid".to_string(),
+            ));
         }
         let user = UserRepo::find_by_id(&self.db, order.user_id).await?;
         let config = SystemConfigRepo::get_config_by_key(
