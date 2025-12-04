@@ -1,4 +1,6 @@
-use crate::model::{User, USER_POWER_RECORD_STATUS_ACTIVE, USER_POWER_RECORD_STATUS_UPGRADE};
+use crate::model::{
+    User, UserPowerRecordStats, USER_POWER_RECORD_STATUS_ACTIVE, USER_POWER_RECORD_STATUS_UPGRADE,
+};
 use crate::utils::time_zone::TimeZone;
 use crate::{
     error::Result,
@@ -14,7 +16,7 @@ pub struct PowerRepo;
 
 impl PowerRepo {
     /// 获取用户的算力记录列表（分页）
-    pub async fn get_user_power_records(
+    pub async fn get_user_power(
         pool: &Pool<MySql>,
         user_id: u64,
         page: u32,
@@ -104,7 +106,6 @@ impl PowerRepo {
         status: i16,
         time: &OffsetDateTime,
     ) -> Result<Vec<UserPower>> {
-        println!("-----{}", time.date().to_string());
         let record = sqlx::query_as!(
             UserPower,
             r#"
@@ -267,7 +268,7 @@ impl PowerRepo {
     }
 
     /// 获取当日收益
-    pub async fn get_daily_power_record(
+    pub async fn get_daily_power_total(
         pool: &Pool<MySql>,
         current_time: &OffsetDateTime,
         user_id: u64,
@@ -285,5 +286,28 @@ impl PowerRepo {
             return Ok(Decimal::ZERO);
         };
         Ok(total)
+    }
+
+    /// 获取当日收益列表
+    pub async fn get_daily_power_record_by_date(
+        pool: &Pool<MySql>,
+        current_time: &time::Date,
+        user_id: u64,
+    ) -> Result<Vec<UserPowerRecordStats>> {
+        let record = sqlx::query_as!(
+            UserPowerRecordStats,
+            r#"
+            SELECT upr.created_at, upr.user_id, upr.power_package_id, upr.amount, upr.package_amount, upr.close_price, upr.daily_yield_percentage, upr.lv, upr.user_power_id, pp.title
+            FROM user_power_record upr
+            LEFT JOIN power_packages pp on pp.id = upr.power_package_id
+            WHERE upr.created_at = ? AND upr.user_id = ?
+            "#,
+            current_time,
+            user_id
+        )
+        .fetch_all(pool)
+        .await?;
+
+        Ok(record)
     }
 }
