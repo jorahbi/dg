@@ -1,7 +1,6 @@
 use crate::utils::time_zone::TimeZone;
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
-use sqlx::types::JsonValue;
 use sqlx::FromRow;
 use strum::{Display, EnumString};
 use time::OffsetDateTime;
@@ -63,7 +62,7 @@ pub struct Transactions {
     pub created_at: OffsetDateTime,
     /// 交易元数据JSON，存储额外的交易相关信息
     #[builder(default = None)]
-    pub metadata: Option<JsonValue>,
+    pub metadata: Option<Vec<u8>>,
     /// 交易最后更新时间，自动更新时间戳
     #[builder(default = TimeZone::Beijing.get_time())]
     pub updated_at: OffsetDateTime,
