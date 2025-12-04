@@ -26,10 +26,7 @@ use crate::{
             forgot_password_verify, get_security_questions, login, logout, register,
             reset_password, save_security_questions,
         },
-        chart::{
-            get_asset_chart_data, get_kline_data, get_leaderboard, get_power_chart_data,
-            get_price_info, get_realtime_data, get_trading_pairs,
-        },
+        chart::{get_asset_chart_data, get_leaderboard, get_power_chart_data, get_realtime_data},
         chat::{get_chat_messages, mark_chat_message_read, send_message, ws_chat_handler},
         cron::{get_cron_status, start_cron_scheduler, stop_cron_scheduler},
         earnings::get_earnings,
@@ -39,10 +36,6 @@ use crate::{
         message::{
             delete_message, get_messages, get_unread_count, mark_all_messages_read,
             mark_message_read,
-        },
-        node_stats::{
-            get_hashrate_distribution, get_node_map, get_node_stats, get_performance_metrics,
-            refresh_node_stats,
         },
         power::{
             cancel_withdrawal, get_all_power_packages, get_power_records, get_power_stats,
@@ -54,7 +47,6 @@ use crate::{
         },
         purchase::{cancel_order, create_order, get_order_detail, get_package_detail},
         system_config::{create_config, delete_config, get_config_by_key, update_config},
-        task::{accelerate_task, get_tasks, start_task},
         user::get_user_info,
         user_benefit::{claim_benefit, get_benefit_center, get_new_user_benefit},
     },
@@ -64,82 +56,23 @@ use crate::{
 
 pub async fn create_app(app_state: Arc<AppState>) -> Result<Router, crate::error::AppError> {
     // Public routes (no JWT verification required)
-    let public_routes = Router::new()
-        // Authentication management module
-        .route("/auth/register", post(register)) //✅
-        .route("/auth/login", post(login)) //✅
-        .route(
-            "/auth/forgot-password/questions",
-            post(forgot_password_questions), //✅
-        )
-        .route("/auth/forgot-password/verify", post(forgot_password_verify)) //✅
-        .route("/auth/forgot-password/reset", post(reset_password)) //✅
-        .route("/auth/security-questions", get(get_security_questions)) //✅
-        // Home data module (public access)
-        // .route("/home/carousel", get(get_carousel))
-        // .route("/home/statistics", get(get_statistics))//✅
-        .route("/v1/ticker/price", get(get_price_info))
-        .route("/v1/markets", get(get_trading_pairs))
-        .route("/v1/chart/kline", get(get_kline_data))
-        // 其他公开路由
-        .route("/about-us", get(get_about_us));
+    let public_routes = Router::new().route("/about-us", get(get_about_us));
 
     // Protected routes requiring JWT verification
     let protected_routes = Router::new()
         // Authentication management module (requires login)
-        .route("/auth/logout", post(logout))
-        .route("/auth/security-questions", post(save_security_questions))//✅
         .route(
             "/auth/security-questions/check",
             get(check_security_questions),
         )
         .route("/user/profile/password", post(change_password))
         // User management module
-        .route("/user/info", get(get_user_info)) //✅
-        .route("/user/invite/code", get(get_invite_code))
-        .route("/user/new-user-benefit", get(get_new_user_benefit))
-        .route("/user/benefits", get(get_benefit_center))
-        .route("/user/benefits/claim/:benefitId", post(claim_benefit))
-        .route("/user/benefits/new-user", get(get_new_user_benefit))
-        .route("/user/kyc/status", get(get_kyc_status))
-        .route("/user/kyc/submit", post(submit_kyc))
-        .route("/user/kyc/upload", post(upload_id_card))
         // Purchase management module
-        .route("/power/:powerId", get(get_package_detail)) //✅
-        .route("/purchase/order", post(create_order)) //✅
-        .route("/purchase/orders/:orderId", get(get_order_detail))
-        .route("/purchase/orders/:orderId/cancel", post(cancel_order)) //✅
-        .route("/purchase/orders/:orderId/paid", post(paid_order)) //✅
-        .route("/purchase/orders/upgrade", post(upgrade_order)) //✅
-        // Computing power management module
-        .route("/power/:upp/start/", put(start_power)) //✅
-        .route("/power/records", get(get_power_records)) //✅
-        .route("/power/packages", get(get_all_power_packages)) //✅
-        .route("/power/stats", get(get_power_stats))
-        .route("/power/upgrade/:levelId", post(upgrade_level))
-        .route("/power/withdraw", post(withdraw_power))
-        .route("/power/withdrawal", get(get_withdrawal))
-        .route(
-            "/power/withdrawal/:withdrawalId/cancel",
-            post(cancel_withdrawal),
-        )
         // Activities
-        .route("/activity/welcome", get(welcome_bonus)) //✅
-        .route("/home/statistics", get(get_statistics))//✅
         // Earnings management module
         .route("/earnings", get(get_earnings))
         // Airdrop activity module
-        .route("/airdrops", get(get_airdrops))
-        .route("/airdrops/claim", post(claim_airdrop))
-        .route("/airdrops/history", get(get_airdrop_history))
-        .route("/airdrops/stats", get(get_airdrop_stats))
-        .route("/airdrops/popular", get(get_popular_airdrops))
-        .route("/airdrops/daily-status", get(check_daily_airdrop_status))
-        .route("/airdrops/eligibility", get(get_user_airdrop_eligibility))
         // Task management module
-        .route("/tasks", get(get_tasks))
-        .route("/tasks/:taskId/start", post(start_task))
-        .route("/tasks/:taskId/accelerate", post(accelerate_task))
         // Invitation reward module
         .route("/invite/rewards", get(get_invite_rewards))
         .route("/invite/code", get(get_invite_code))
@@ -166,12 +99,6 @@ pub async fn create_app(app_state: Arc<AppState>) -> Result<Router, crate::error
         .route("/chart/asset", get(get_asset_chart_data))
         .route("/chart/realtime", get(get_realtime_data))
         .route("/chart/leaderboard", get(get_leaderboard))
-        // Node statistics module
-        .route("/node/stats", get(get_node_stats))
-        .route("/node/performance", get(get_performance_metrics))
-        .route("/node/hashrate", get(get_hashrate_distribution))
-        .route("/node/map", get(get_node_map))
-        .route("/node/refresh", post(refresh_node_stats))
         // Promotion activity module
         .route("/promotions", get(get_promotions))
         .route("/promotions/:promotionId", get(get_promotion_detail))
@@ -196,6 +123,17 @@ pub async fn create_app(app_state: Arc<AppState>) -> Result<Router, crate::error
         .route("/cron/start", post(start_cron_scheduler))
         .route("/cron/stop", post(stop_cron_scheduler))
         // Apply JWT verification middleware to all protected routes
+        .layer(middleware::from_fn_with_state(
+            app_state.clone(),
+            jwt_auth_middleware,
+        ));
+
+    let protected_routes = protected_routes
+        .merge(user())
+        .merge(pwoer())
+        .merge(order())
+        .merge(activity())
+        .merge(auth())
         .layer(middleware::from_fn_with_state(
             app_state.clone(),
             jwt_auth_middleware,
@@ -257,6 +195,83 @@ pub async fn create_app(app_state: Arc<AppState>) -> Result<Router, crate::error
         .with_state((*app_state).clone());
 
     Ok(app)
+}
+
+fn user() -> Router<AppState> {
+    let route = Router::new()
+        .route("/user/info", get(get_user_info)) //✅
+        .route("/user/statistics", get(get_statistics)) //✅
+        .route("/auth/security-questions", post(save_security_questions)) //✅
+        .route("/auth/logout", post(logout))
+        .route("/user/invite/code", get(get_invite_code))
+        .route("/user/new-user-benefit", get(get_new_user_benefit))
+        .route("/user/benefits", get(get_benefit_center))
+        .route("/user/benefits/claim/:benefitId", post(claim_benefit))
+        .route("/user/benefits/new-user", get(get_new_user_benefit))
+        .route("/user/kyc/status", get(get_kyc_status))
+        .route("/user/kyc/submit", post(submit_kyc))
+        .route("/user/kyc/upload", post(upload_id_card));
+
+    route
+}
+
+fn pwoer() -> Router<AppState> {
+    let route = Router::new()
+        .route("/power/:powerId", get(get_package_detail)) //✅
+        // Computing power management module
+        .route("/power/:upp/start/", put(start_power)) //✅
+        .route("/power/records", get(get_power_records)) //✅
+        .route("/power/packages", get(get_all_power_packages)) //✅
+        .route("/power/:date/stats", get(get_power_stats)) //✅
+        .route("/power/upgrade/:levelId", post(upgrade_level))
+        .route("/power/withdraw", post(withdraw_power))
+        .route("/power/withdrawal", get(get_withdrawal))
+        .route(
+            "/power/withdrawal/:withdrawalId/cancel",
+            post(cancel_withdrawal),
+        );
+
+    route
+}
+
+fn order() -> Router<AppState> {
+    let route = Router::new()
+        .route("/purchase/order", post(create_order)) //✅
+        .route("/purchase/orders/:orderId", get(get_order_detail))
+        .route("/purchase/orders/:orderId/cancel", post(cancel_order)) //✅
+        .route("/purchase/orders/:orderId/paid", post(paid_order)) //✅
+        .route("/purchase/orders/upgrade", post(upgrade_order)); //✅
+
+    return route;
+}
+
+fn activity() -> Router<AppState> {
+    let route = Router::new()
+        .route("/activity/welcome", get(welcome_bonus)) //✅
+        .route("/airdrops", get(get_airdrops))
+        .route("/airdrops/claim", post(claim_airdrop))
+        .route("/airdrops/history", get(get_airdrop_history))
+        .route("/airdrops/stats", get(get_airdrop_stats))
+        .route("/airdrops/popular", get(get_popular_airdrops))
+        .route("/airdrops/daily-status", get(check_daily_airdrop_status))
+        .route("/airdrops/eligibility", get(get_user_airdrop_eligibility));
+
+    return route;
+}
+
+fn auth() -> Router<AppState> {
+    let routes = Router::new()
+        // Authentication management module
+        .route("/auth/register", post(register)) //✅
+        .route("/auth/login", post(login)) //✅
+        .route(
+            "/auth/forgot-password/questions",
+            post(forgot_password_questions), //✅
+        )
+        .route("/auth/forgot-password/verify", post(forgot_password_verify)) //✅
+        .route("/auth/forgot-password/reset", post(reset_password)) //✅
+        .route("/auth/security-questions", get(get_security_questions)); //✅
+    return routes;
 }
 
 // Health check handler
