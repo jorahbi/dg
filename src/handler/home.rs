@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use crate::extract::AuthUser;
 use crate::repository::power_repo::PowerRepo;
 use crate::repository::UserRepo;
@@ -18,7 +17,7 @@ pub async fn get_statistics(
     let mut asset = UserRepo::get_assets(&state.db, auth_user.id).await?;
     asset.daily_balance = Decimal::ZERO;
     let curr = TimeZone::Beijing.get_time();
-    asset.daily_balance = PowerRepo::get_daily_power_record(&state.db, &curr, auth_user.id).await?;
+    asset.daily_balance = PowerRepo::get_daily_power_total(&state.db, &curr, auth_user.id).await?;
     let response = ApiResponse::success(asset);
     Ok(Json(response))
 }
