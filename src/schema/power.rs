@@ -1,5 +1,11 @@
+use crate::{model::extract_localized_string, utils::convert::FromWith};
 use serde::{Deserialize, Serialize};
 use time::OffsetDateTime;
+
+use crate::model::UserPowerRecordStats;
+use chrono::DateTime;
+use rust_decimal::Decimal;
+use sqlx::types::chrono::FixedOffset;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PowerPackageRequest {
@@ -77,26 +83,38 @@ pub struct PowerRecordsPagination {
     pub total_pages: u32,
 }
 
-fn default_sort_field() -> String {
-    "created_at".to_string()
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct UserPowerRecordStatsResp {
+    pub user_id: u64,
+    pub power_package_id: u64,
+    pub user_power_id: i64,
+    pub title: String,
+    pub lv: i16,
+    pub daily_yield_percentage: Decimal,
+    pub close_price: Decimal,
+    pub package_amount: Decimal,
+    pub amount: Decimal,
+    pub created_at: String,
 }
 
-fn default_sort_direction() -> String {
-    "desc".to_string()
-}
+impl FromWith<UserPowerRecordStats, &str> for UserPowerRecordStatsResp {
+    fn from_with(stats: UserPowerRecordStats, lang: &str) -> Self {
+        let mut title = "".to_string();
+        if let Some(t) = &stats.title {
+            title = extract_localized_string(t, lang);
+        }
 
-/// 算力统计响应
-#[derive(Debug, Serialize, Deserialize)]
-pub struct PowerStatsResponse {
-    pub total_records: u64,
-    pub active_records: u64,
-    pub total_invested: rust_decimal::Decimal,
-    pub total_earnings: rust_decimal::Decimal,
-    pub total_hashrate: rust_decimal::Decimal,
-    pub today_earnings: Option<rust_decimal::Decimal>,
-}
-
-pub struct OrderRequest {
-    pub power_id: i64,
-    pub num: u64,
+        Self {
+            user_id: stats.user_id,
+            power_package_id: stats.power_package_id,
+            user_power_id: stats.user_power_id,
+            title: title,
+            lv: stats.lv,
+            daily_yield_percentage: stats.daily_yield_percentage,
+            close_price: stats.close_price,
+            package_amount: stats.package_amount,
+            amount: stats.amount,
+            created_at: stats.created_at.to_string(),
+        }
+    }
 }
