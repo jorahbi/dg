@@ -1,10 +1,14 @@
+use crate::utils::convert::FromWith;
 use crate::{
     error::Result,
     extract::AuthUser,
     model::power::{convert_power_packages, convert_user_power_records},
     repository::power_repo::PowerRepo,
-    schema::common::{ApiResponse, PaginationRequest},
-    schema::power::{PowerPackagesResponse, PowerRecordsPagination, PowerRecordsResponse},
+    schema::{
+        common::{ApiResponse, PaginationRequest},
+        power::{PowerPackagesResponse, PowerRecordsPagination, PowerRecordsResponse},
+        UserPowerRecordStatsResp,
+    },
     state::AppState,
     AppError,
 };
@@ -46,7 +50,10 @@ pub async fn start_power(
         Ok(_) => HashMap::new(),
         Err(err) => {
             tracing::error!("Enable computing power acceleration: {}", err);
-            return Err(AppError::NotFound(format!("Computing power package not exists:{}", err)));
+            return Err(AppError::NotFound(format!(
+                "Computing power package not exists:{}",
+                err
+            )));
         }
     };
 
@@ -68,8 +75,7 @@ pub async fn get_power_records(
     };
 
     // 获取用户的算力记录
-    let (records, total) =
-        PowerRepo::get_user_power_records(&state.db, auth_user.id, page, limit).await?;
+    let (records, total) = PowerRepo::get_user_power(&state.db, auth_user.id, page, limit).await?;
 
     // 转换为响应格式，使用 auth_user 的语言偏好进行多语言转换
     let power_records = convert_user_power_records(records, &auth_user.lang);
@@ -93,42 +99,29 @@ pub async fn get_power_records(
 
 // 获取算力统计信息
 pub async fn get_power_stats(
-    State(_state): State<AppState>,
-    _auth_user: AuthUser,
+    State(state): State<AppState>,
+    auth_user: AuthUser,
+    Path(date): Path<time::Date>,
 ) -> Result<impl IntoResponse> {
-    Ok(Json(ApiResponse::success("ok")))
-    // 获取用户算力统计
-    // let stats = PowerRepo::get_user_power_stats(
-    //     &state.db,
-    //     auth_user.id,
-    // ).await?;
-    //
-    // let stats_response = match stats {
-    //     Some(s) => PowerStatsResponse {
-    //         total_records: s.total_records.unwrap_or(0) as u64,
-    //         active_records: s.active_records.unwrap_or(0) as u64,
-    //         total_invested: s.total_invested
-    //             .and_then(|bd| rust_decimal::Decimal::from_str(&bd.to_string()).ok())
-    //             .unwrap_or_else(|| rust_decimal::Decimal::ZERO),
-    //         total_earnings: s.total_earnings
-    //             .and_then(|bd| rust_decimal::Decimal::from_str(&bd.to_string()).ok())
-    //             .unwrap_or_else(|| rust_decimal::Decimal::ZERO),
-    //         total_hashrate: s.total_hashrate
-    //             .and_then(|bd| rust_decimal::Decimal::from_str(&bd.to_string()).ok())
-    //             .unwrap_or_else(|| rust_decimal::Decimal::ZERO),
-    //         today_earnings: None, // 需要额外的查询逻辑来计算今日收益
-    //     },
-    //     None => PowerStatsResponse {
-    //         total_records: 0,
-    //         active_records: 0,
-    //         total_invested: rust_decimal::Decimal::ZERO,
-    //         total_earnings: rust_decimal::Decimal::ZERO,
-    //         total_hashrate: rust_decimal::Decimal::ZERO,
-    //         today_earnings: None,
-    //     },
-    // };
-    //
-    // Ok(Json(ApiResponse::success(stats_response)))
+    let result = PowerRepo::get_daily_power_record_by_date(&state.db, &date, auth_user.id).await;
+    match result {
+        Ok(result) => {
+            let res: Vec<UserPowerRecordStatsResp> = result
+                .into_iter()
+                .map(|item| UserPowerRecordStatsResp::from_with(item, ""))
+                .collect();
+            Ok(Json(res))
+        }
+        Err(err) => {
+            tracing::error!(
+                "get_power_stats id: {}, date: {}, err: {}",
+                auth_user.id,
+                date,
+                err
+            );
+            Err(AppError::NotFound("".to_string()))
+        }
+    }
 }
 
 // 升级等级
