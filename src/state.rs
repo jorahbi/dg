@@ -1,8 +1,8 @@
+use crate::config::Config;
+use crate::websocket::hub::WsHub;
 use sqlx::MySqlPool;
 use std::sync::Arc;
 use tokio::sync::RwLock;
-use crate::config::Config;
-use crate::websocket::hub::WsHub;
 
 #[derive(Clone)]
 pub struct AppState {
@@ -27,31 +27,30 @@ impl AppState {
                 .connect(&config.database.url)
                 .await?,
         );
-
         // 创建WebSocket Hub
         let ws_hub = Arc::new(RwLock::new(WsHub::new()));
 
         // 创建定时任务调度器
         let cron_scheduler = Arc::new(crate::cron::scheduler::CronSchedulerManager::new());
-
-        Ok(Self {
+        let state = Self {
             config: Arc::new(config),
             db,
             ws_hub,
             cron_scheduler,
-        })
+        };
+        state.health_check().await?;
+
+        Ok(state)
     }
 
-    pub async fn health_check(&self) -> bool {
+    pub async fn health_check(&self) -> anyhow::Result<()> {
         // 检查数据库连接
-        if let Err(e) = sqlx::query("SELECT 1")
-            .fetch_one(self.db.as_ref())
-            .await
-        {
+        if let Err(e) = sqlx::query("SELECT 1").fetch_one(self.db.as_ref()).await {
             tracing::error!("Database health check failed: {:?}", e);
-            return false;
+            return Err(anyhow::anyhow!(e));
         }
+        tracing::info!("health check successful");
 
-        true
+        Ok(())
     }
 }
