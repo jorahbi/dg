@@ -18,6 +18,7 @@ pub async fn get_statistics(
     asset.daily_balance = Decimal::ZERO;
     let curr = TimeZone::Beijing.get_time();
     asset.daily_balance = PowerRepo::get_daily_power_total(&state.db, &curr, auth_user.id).await?;
+    println!("{:?}", serde_json::to_string(&asset));
     let response = ApiResponse::success(asset);
     Ok(Json(response))
 }

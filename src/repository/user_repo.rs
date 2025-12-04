@@ -1,8 +1,4 @@
-use crate::{
-    error::Result,
-    model::{User, UserSecurityAnswer},
-    AppError,
-};
+use crate::{error::Result, model::User, AppError};
 use chrono::{Duration, Utc};
 use sqlx::{FromRow, MySqlConnection, MySqlPool};
 
@@ -650,7 +646,7 @@ impl UserRepo {
     pub async fn get_assets(pool: &MySqlPool, user_id: u64) -> Result<Assets> {
         let asset = sqlx::query_as!(
             Assets,
-            r#" SELECT upgrade_progress, dg_amount, dg_amount as daily_balance, total_assets FROM users WHERE id = ? "#,
+            r#" SELECT upgrade_progress, user_level, dg_amount, dg_amount as daily_balance, total_assets FROM users WHERE id = ? "#,
             user_id
         )
         .fetch_optional(pool)

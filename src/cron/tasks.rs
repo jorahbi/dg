@@ -1,4 +1,3 @@
-use crate::model::transactions::TransactionsBuilder;
 use crate::model::USER_POWER_RECORD_STATUS_ACTIVE;
 use crate::repository::power_repo::PowerRepo;
 use crate::utils::time_zone::TimeZone;

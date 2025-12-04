@@ -142,6 +142,7 @@ impl AuthService {
             username,
             token,
             has_security_questions,
+            level: user.user_level,
         })
     }
 

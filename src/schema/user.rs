@@ -40,6 +40,7 @@ pub struct LoginRes {
     pub token: String,
     #[serde(rename = "hasSecurityQuestions")]
     pub has_security_questions: bool,
+    pub level: u8,
 }
 
 // 用户信息响应

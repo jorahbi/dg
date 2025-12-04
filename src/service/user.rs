@@ -1,4 +1,3 @@
-use crate::model::Assets;
 use crate::repository::UserRepo;
 use crate::{error::Result, model, state::AppState};
 use sqlx::query_scalar;

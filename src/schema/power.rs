@@ -3,9 +3,8 @@ use serde::{Deserialize, Serialize};
 use time::OffsetDateTime;
 
 use crate::model::UserPowerRecordStats;
-use chrono::DateTime;
+use chrono::NaiveDate;
 use rust_decimal::Decimal;
-use sqlx::types::chrono::FixedOffset;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PowerPackageRequest {
@@ -84,16 +83,33 @@ pub struct PowerRecordsPagination {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct UserPowerRecordStatsReq {
+    pub start: NaiveDate,
+    pub end: NaiveDate,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UserPowerRecordStatsResp {
+    pub id: u64,
+    #[serde(rename = "userId")]
     pub user_id: u64,
+    #[serde(rename = "powerPackageId")]
     pub power_package_id: u64,
+    #[serde(rename = "userPowerId")]
     pub user_power_id: i64,
+    #[serde(rename = "title")]
     pub title: String,
+    #[serde(rename = "lv")]
     pub lv: i16,
+    #[serde(rename = "dailyYieldPercentage")]
     pub daily_yield_percentage: Decimal,
+    #[serde(rename = "closePrice")]
     pub close_price: Decimal,
+    #[serde(rename = "packageAmount")]
     pub package_amount: Decimal,
+    #[serde(rename = "amount")]
     pub amount: Decimal,
+    #[serde(rename = "createdAt")]
     pub created_at: String,
 }
 
@@ -105,10 +121,11 @@ impl FromWith<UserPowerRecordStats, &str> for UserPowerRecordStatsResp {
         }
 
         Self {
+            id: stats.id,
             user_id: stats.user_id,
             power_package_id: stats.power_package_id,
             user_power_id: stats.user_power_id,
-            title: title,
+            title,
             lv: stats.lv,
             daily_yield_percentage: stats.daily_yield_percentage,
             close_price: stats.close_price,

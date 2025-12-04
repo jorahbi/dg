@@ -1,3 +1,4 @@
+use crate::schema::UserPowerRecordStatsReq;
 use crate::utils::convert::FromWith;
 use crate::{
     error::Result,
@@ -101,22 +102,30 @@ pub async fn get_power_records(
 pub async fn get_power_stats(
     State(state): State<AppState>,
     auth_user: AuthUser,
-    Path(date): Path<time::Date>,
+    Json(payload): Json<UserPowerRecordStatsReq>,
 ) -> Result<impl IntoResponse> {
-    let result = PowerRepo::get_daily_power_record_by_date(&state.db, &date, auth_user.id).await;
+    let result = PowerRepo::get_daily_power_record_by_date(
+        &state.db,
+        &payload.start,
+        &payload.end,
+        auth_user.id,
+    )
+    .await;
     match result {
         Ok(result) => {
             let res: Vec<UserPowerRecordStatsResp> = result
                 .into_iter()
                 .map(|item| UserPowerRecordStatsResp::from_with(item, ""))
                 .collect();
-            Ok(Json(res))
+
+            Ok( Json(ApiResponse::success(res)))
         }
         Err(err) => {
             tracing::error!(
-                "get_power_stats id: {}, date: {}, err: {}",
+                "get_power_stats id: {}, date: {} - {}, err: {}",
                 auth_user.id,
-                date,
+                payload.start,
+                payload.end,
                 err
             );
             Err(AppError::NotFound("".to_string()))

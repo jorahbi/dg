@@ -1,7 +1,6 @@
 use crate::utils::time_zone::TimeZone;
 use crate::{error::Result, model::system_config::SystemConfig, AppError};
 use sqlx::{MySql, Pool};
-use time::OffsetDateTime;
 
 /// 系统配置仓库
 pub struct SystemConfigRepo;
@@ -63,7 +62,7 @@ impl SystemConfigRepo {
         pool: &Pool<MySql>,
         page: u32,
         limit: u32,
-        offset: u32,
+        _offset: u32,
     ) -> Result<(Vec<SystemConfig>, u64)> {
         let offset = (page - 1) * limit;
 

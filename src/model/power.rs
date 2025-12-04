@@ -81,6 +81,7 @@ pub struct UserPowerRecord {
 
 #[derive(Debug, Clone, FromRow)]
 pub struct UserPowerRecordStats {
+    pub id: u64,
     pub user_id: u64,
     pub power_package_id: u64,
     pub user_power_id: i64,

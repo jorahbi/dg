@@ -1,6 +1,5 @@
-use crate::model::transactions::{OrderStatus, OrderType, Transactions, TransactionsBuilder};
+use crate::model::transactions::{OrderStatus, OrderType, TransactionsBuilder};
 use crate::repository::{TransactionsRepo, UserRepo};
-use crate::utils::gen::generate_no;
 use crate::utils::time_zone::TimeZone;
 use crate::{error::Result, state::AppState, AppError};
 use rust_decimal::Decimal;

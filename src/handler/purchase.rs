@@ -10,8 +10,7 @@ use crate::{
     extract::AuthUser,
     schema::common::ApiResponse,
     schema::order::{
-        CreateOrderRequest, CreateOrderResponse, UpdateOrderStatusRequest,
-        UpdateOrderStatusResponse,
+        CreateOrderRequest, CreateOrderResponse
     },
     schema::power::PowerPackageItem,
     state::AppState,

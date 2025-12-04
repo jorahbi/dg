@@ -1,5 +1,5 @@
-use crate::model::{
-    User, UserPowerRecordStats, USER_POWER_RECORD_STATUS_ACTIVE, USER_POWER_RECORD_STATUS_UPGRADE,
+use chrono::NaiveDate;
+use crate::model::{UserPowerRecordStats, USER_POWER_RECORD_STATUS_ACTIVE, USER_POWER_RECORD_STATUS_UPGRADE,
 };
 use crate::utils::time_zone::TimeZone;
 use crate::{
@@ -291,18 +291,20 @@ impl PowerRepo {
     /// 获取当日收益列表
     pub async fn get_daily_power_record_by_date(
         pool: &Pool<MySql>,
-        current_time: &time::Date,
+        start_time: &NaiveDate,
+        end_time: &NaiveDate,
         user_id: u64,
     ) -> Result<Vec<UserPowerRecordStats>> {
         let record = sqlx::query_as!(
             UserPowerRecordStats,
             r#"
-            SELECT upr.created_at, upr.user_id, upr.power_package_id, upr.amount, upr.package_amount, upr.close_price, upr.daily_yield_percentage, upr.lv, upr.user_power_id, pp.title
+            SELECT upr.id, upr.created_at, upr.user_id, upr.power_package_id, upr.amount, upr.package_amount, upr.close_price, upr.daily_yield_percentage, upr.lv, upr.user_power_id, pp.title
             FROM user_power_record upr
             LEFT JOIN power_packages pp on pp.id = upr.power_package_id
-            WHERE upr.created_at = ? AND upr.user_id = ?
+            WHERE upr.created_at >= ? AND upr.created_at <= ? AND upr.user_id = ?
             "#,
-            current_time,
+            end_time,
+            start_time,
             user_id
         )
         .fetch_all(pool)

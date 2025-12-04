@@ -130,7 +130,7 @@ pub async fn create_app(app_state: Arc<AppState>) -> Result<Router, crate::error
 
     let protected_routes = protected_routes
         .merge(user())
-        .merge(pwoer())
+        .merge(power())
         .merge(order())
         .merge(activity())
         .merge(auth())
@@ -215,14 +215,14 @@ fn user() -> Router<AppState> {
     route
 }
 
-fn pwoer() -> Router<AppState> {
+fn power() -> Router<AppState> {
     let route = Router::new()
         .route("/power/:powerId", get(get_package_detail)) //✅
         // Computing power management module
         .route("/power/:upp/start/", put(start_power)) //✅
         .route("/power/records", get(get_power_records)) //✅
         .route("/power/packages", get(get_all_power_packages)) //✅
-        .route("/power/:date/stats", get(get_power_stats)) //✅
+        .route("/power/stats", post(get_power_stats)) //✅
         .route("/power/upgrade/:levelId", post(upgrade_level))
         .route("/power/withdraw", post(withdraw_power))
         .route("/power/withdrawal", get(get_withdrawal))

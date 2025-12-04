@@ -69,8 +69,14 @@ pub struct NewSecurityAnswer {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Assets {
+    #[serde(rename = "upgradeProgress")]
     pub upgrade_progress: i32,
+    #[serde(rename = "amount")]
     pub dg_amount: Decimal,
+    #[serde(rename = "totalYield")]
     pub total_assets: Decimal,
+    #[serde(rename = "dailyYield")]
     pub daily_balance: Decimal,
+    #[serde(rename = "lv")]
+    pub user_level: u8,
 }
